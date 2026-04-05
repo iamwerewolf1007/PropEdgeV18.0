@@ -363,8 +363,8 @@ def install(times: dict[str, tuple[int, int]] | None = None) -> None:
         AGENTS["b0"], "batch0_grade.py", *WEEKDAY_TIMES["b0"], "batch0"))
 
     # Injury ingest — 08:00 (between grade and B1), runs fetch + force
-    plists["ij"] = PLIST_DIR / f"{AGENTS['ij']}.plist"
-    plists["ij"].write_text(_plist_content(
+    plists["inj"] = PLIST_DIR / f"{AGENTS['inj']}.plist"
+    plists["inj"].write_text(_plist_content(
         AGENTS["ij"], "injury_ingest.py", *WEEKDAY_TIMES["ij"], "injury_ingest",
         args=["fetch", "--force"]))
 

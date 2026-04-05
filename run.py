@@ -345,7 +345,7 @@ def cmd_h2h():
 
 def cmd_injury():
     """Fetch latest injury report and update data/injuries_current.json."""
-    from injury_ingest import fetch_and_update, print_status
+    from injury_ingest import fetch_and_store, print_status
     import argparse
     force  = "--force"  in sys.argv
     status = "--status" in sys.argv
@@ -353,7 +353,7 @@ def cmd_injury():
     if status:
         print_status(date_arg)
     else:
-        result = fetch_and_update(date_str=date_arg, force=force)
+        result = fetch_and_store(date_str=date_arg)
         print(f"  Injury: {result['status']} | {result['n_rows']} players | {result['n_changed']} changes")
 
 
