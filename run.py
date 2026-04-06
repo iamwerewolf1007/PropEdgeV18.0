@@ -345,16 +345,30 @@ def cmd_h2h():
 
 def cmd_injury():
     """Fetch latest injury report and update data/injuries_current.json."""
-    from injury_ingest import fetch_and_store, print_status
-    import argparse
-    force  = "--force"  in sys.argv
-    status = "--status" in sys.argv
-    date_arg = next((sys.argv[i+1] for i,a in enumerate(sys.argv) if a=="--date"), None)
+    from injury_ingest import fetch_and_store, load_injury_state
+    status   = "--status" in sys.argv
+    date_arg = next((sys.argv[i+1] for i,a in enumerate(sys.argv) if a == "--date"), None)
     if status:
-        print_status(date_arg)
+        state = load_injury_state(date_str=date_arg)
+        if not state:
+            print("  No injury data available."); return
+        out   = [v for v in state.values() if v.get("status_normalized") == "OUT"]
+        doubt = [v for v in state.values() if v.get("status_normalized") == "DOUBTFUL"]
+        ques  = [v for v in state.values() if v.get("status_normalized") == "QUESTIONABLE"]
+        print(f"\n  Injury report — {date_arg or 'today'}")
+        print(f"  {'─'*55}")
+        print(f"  OUT ({len(out)}):")
+        for v in out[:15]:
+            print(f"    {v.get('player_name',''):<25} {v.get('team','')}  {v.get('reason_raw','')[:35]}")
+        print(f"  DOUBTFUL ({len(doubt)}):")
+        for v in doubt[:10]:
+            print(f"    {v.get('player_name',''):<25} {v.get('team','')}  {v.get('reason_raw','')[:35]}")
+        print(f"  QUESTIONABLE ({len(ques)}):")
+        for v in ques[:10]:
+            print(f"    {v.get('player_name',''):<25} {v.get('team','')}  {v.get('reason_raw','')[:35]}")
     else:
         result = fetch_and_store(date_str=date_arg)
-        print(f"  Injury: {result['status']} | {result['n_rows']} players | {result['n_changed']} changes")
+        print(f"  Injury: {result.get('status','?')} | {result.get('n_rows',0)} players | {result.get('n_changed',0)} changes")
 
 
 def cmd_check():

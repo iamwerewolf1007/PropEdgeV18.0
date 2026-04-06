@@ -1,37 +1,33 @@
 """
 PropEdge V18.0 — injury_ingest.py
-NBA Official Injury Report ingestion pipeline.
+NBA injury / availability ingestion pipeline.
 
-Architecture:
-  Primary source: nba_api.LeagueInjuryReports (structured JSON — no PDF parsing needed)
-  Secondary source: NBA CMS PDF (ak-static.cms.nba.com) — for audit + timestamp
-  Outputs (flat files — no DB):
-    data/injuries_current.json      — latest state per player (keyed by normalized name)
-    data/injury_report_history.csv  — append-only history of every row from every report
-    data/injury_report_manifest.json — report-level metadata (URL, hash, timestamps)
+Data sources (both proven UK-compatible):
+  1. cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json
+     -> Today's games + game IDs (public CDN, not geo-blocked)
+  2. nba_api BoxScoreTraditionalV3 per game_id (same call V14 uses for grading)
+     -> Returns full roster with INACTIVE status pre-game, DNP=0min post-game
+  3. nba_api ScoreboardV3 fallback for game IDs (V14-proven UK-compatible)
 
-Point-in-time integrity:
-  Every row carries report_ts. Downstream jobs query:
-    get_injury_status(player, as_of_ts) → status at that moment.
-  This prevents leakage in backtests.
+Why not stats.nba.com or NBA CMS PDFs:
+  - stats.nba.com is geo-blocked from UK
+  - NBA CMS PDFs only exist during season on game days
+  - cdn.nba.com is the public NBA app CDN — not geo-blocked anywhere
 
-Name matching:
-  Uses PropEdge normalize_name() — compatible with game log CSV names.
-  Handles Jr./Sr./II/III suffixes, punctuation (P.J.→PJ), accents.
-
-Status buckets:
-  OUT, QUESTIONABLE, DOUBTFUL, PROBABLE, AVAILABLE, NOT_YET_SUBMITTED, UNKNOWN
+Status model:
+  INACTIVE -> player confirmed not playing (in inactives list)
+  ACTIVE   -> player confirmed in game roster
+  UNKNOWN  -> player not found in any game today
 
 CLI:
-  python3 injury_ingest.py fetch          — fetch latest report, update files
-  python3 injury_ingest.py fetch --date YYYY-MM-DD  — fetch for specific date
-  python3 injury_ingest.py status         — show current injury state
-  python3 injury_ingest.py changes        — show status changes from last report
-  python3 injury_ingest.py history PLAYER — show history for a player
+  python3 injury_ingest.py           -- fetch + update
+  python3 injury_ingest.py --status  -- show current state (no fetch)
+  python3 injury_ingest.py --date 2026-10-22 -- specific date
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -45,10 +41,12 @@ from typing import Optional
 
 import requests
 
-sys.path.insert(0, str(Path(__file__).parent))
+ROOT = Path(__file__).parent.resolve()
+sys.path.insert(0, str(ROOT))
+
 from config import (
     FILE_INJURIES_CURRENT, FILE_INJURY_HISTORY, FILE_INJURY_MANIFEST,
-    FILE_AUDIT, ODDS_API_KEY, get_uk,
+    today_et,
 )
 from audit import log_event
 
@@ -56,797 +54,427 @@ from audit import log_event
 # CONSTANTS
 # ─────────────────────────────────────────────────────────────────────────────
 
-NBA_INJURY_API = "https://stats.nba.com/stats/leagueinjuries"
-NBA_INJURY_PAGE = "https://www.nba.com/players/injury-report"
-NBA_CMS_PDF_BASE = "https://ak-static.cms.nba.com/wp-content/uploads/injury-report"
+NBA_CDN_SCOREBOARD = "https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json"
 
-_NBA_HEADERS = {
-    "Host": "stats.nba.com",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "en-US,en;q=0.9",
-    "x-nba-stats-origin": "stats",
-    "x-nba-stats-token": "true",
-    "Referer": "https://www.nba.com/",
-    "Origin": "https://www.nba.com",
-}
-
-# Status normalisation map — raw NBA text → bucket
-_STATUS_MAP = {
-    "out":                  "OUT",
-    "doubtful":             "DOUBTFUL",
-    "questionable":         "QUESTIONABLE",
-    "probable":             "PROBABLE",
-    "available":            "AVAILABLE",
-    "not yet submitted":    "NOT_YET_SUBMITTED",
-    "gtd":                  "QUESTIONABLE",   # game-time decision = questionable
-    "game time decision":   "QUESTIONABLE",
-    "day to day":           "QUESTIONABLE",
-    "inactive":             "OUT",
-    "dnp":                  "OUT",
-    "will not play":        "OUT",
-}
-
-# Reason categories (mapped from reason keywords)
-_REASON_CATS = [
-    ("rest",         ["rest","load management","maintenance"]),
-    ("knee",         ["knee","acl","mcl","meniscus","patellar"]),
-    ("ankle",        ["ankle","achilles"]),
-    ("hamstring",    ["hamstring","quad","quadricep"]),
-    ("back",         ["back","lumbar","spine","spinal"]),
-    ("shoulder",     ["shoulder","rotator"]),
-    ("foot",         ["foot","plantar","toe","heel"]),
-    ("hand_wrist",   ["hand","wrist","finger","thumb"]),
-    ("illness",      ["illness","flu","covid","cold","personal","non-covid"]),
-    ("hip_groin",    ["hip","groin","pelvis"]),
-    ("concussion",   ["concussion","head","neck"]),
-    ("suspension",   ["suspension","suspended"]),
-    ("personal",     ["personal","family"]),
-    ("not_submitted",["not yet submitted"]),
+import random as _random
+_UA_POOL = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
 ]
 
+def _cdn_headers() -> dict:
+    return {
+        "User-Agent":      _random.choice(_UA_POOL),
+        "Accept":          "application/json, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer":         "https://www.nba.com/",
+        "Origin":          "https://www.nba.com",
+    }
+
+HISTORY_COLUMNS = [
+    "fetch_ts", "game_date", "game_id", "matchup",
+    "team", "opponent",
+    "player_name", "player_name_normalized",
+    "status_normalized", "status_raw",
+    "source_url", "source_hash",
+    "first_seen_ts", "last_seen_ts", "status_changed",
+]
 
 # ─────────────────────────────────────────────────────────────────────────────
-# NAME NORMALISATION (V18 extended — compatible with game log CSV names)
+# NAME NORMALIZATION
 # ─────────────────────────────────────────────────────────────────────────────
+
+_SUFFIX_RE = re.compile(r"\b(jr\.?|sr\.?|ii|iii|iv)\b", re.IGNORECASE)
+_PUNCT_RE  = re.compile(r"[.\-']")
 
 def normalize_player_name(raw: str) -> str:
-    """
-    Canonical join key compatible with PropEdge game log CSV player names.
-    Handles: accents, Jr/Sr/II/III suffixes, punctuation (P.J.→PJ),
-             extra spaces, case.
-    """
-    if not raw:
+    if not raw or str(raw).strip().lower() in ("", "nan", "none"):
         return ""
-    # Unicode normalisation → ASCII
-    s = unicodedata.normalize("NFKD", raw)
-    s = "".join(c for c in s if not unicodedata.combining(c))
-    # Remove periods inside initials (P.J. → PJ, T.J. → TJ)
-    s = re.sub(r"(?<=[A-Z])\.(?=[A-Z])", "", s)
-    s = re.sub(r"(?<=\s[A-Z])\.(?=\s|$)", "", s)
-    # Remove common suffixes (Jr., Sr., II, III, IV)
-    s = re.sub(r"\s+(Jr\.?|Sr\.?|II|III|IV)$", "", s, flags=re.IGNORECASE)
-    # Collapse multiple spaces, strip
-    s = re.sub(r"\s+", " ", s).strip()
-    return s.lower()
+    name = str(raw).strip()
+    name = unicodedata.normalize("NFD", name)
+    name = "".join(c for c in name if unicodedata.category(c) != "Mn")
+    name = _SUFFIX_RE.sub("", name).strip()
+    name = name.lower()
+    name = _PUNCT_RE.sub("", name)
+    return " ".join(name.split())
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STATUS / REASON NORMALISATION
+# SOURCE 1: NBA CDN Scoreboard -> game IDs
 # ─────────────────────────────────────────────────────────────────────────────
 
-def normalize_status(raw: str) -> str:
-    if not raw:
-        return "UNKNOWN"
-    key = raw.strip().lower()
-    for pattern, bucket in _STATUS_MAP.items():
-        if pattern in key:
-            return bucket
-    return "UNKNOWN"
-
-
-def categorize_reason(raw: str) -> str:
-    if not raw:
-        return "unknown"
-    key = raw.strip().lower()
-    for cat, keywords in _REASON_CATS:
-        if any(kw in key for kw in keywords):
-            return cat
-    return "other"
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# PRIMARY FETCH — nba_api LeagueInjuries endpoint
-# ─────────────────────────────────────────────────────────────────────────────
-
-def _fetch_from_nba_api(date_str: str) -> list[dict] | None:
-    """
-    Fetch injury data from NBA stats API.
-    Returns list of raw row dicts or None on failure.
-    """
+def _fetch_today_games_cdn() -> list[dict]:
+    """Fetch today's games from NBA public CDN. Not geo-blocked."""
     try:
-        time.sleep(1)
-        r = requests.get(
-            NBA_INJURY_API,
-            headers=_NBA_HEADERS,
-            params={
-                "LeagueID":   "00",
-                "Date":       date_str,
-            },
-            timeout=30,
-        )
+        r = requests.get(NBA_CDN_SCOREBOARD, headers=_cdn_headers(), timeout=15)
         r.raise_for_status()
-        data = r.json()
-
-        # Try nba_api library as fallback
-        result_sets = data.get("resultSets", [])
-        if not result_sets:
-            return None
-
-        rs = result_sets[0]
-        headers = rs.get("headers", [])
-        rows    = rs.get("rowSet", [])
-        if not rows:
-            return None
-
-        return [dict(zip(headers, row)) for row in rows]
-
+        data  = r.json()
+        games = data.get("scoreboard", {}).get("games", [])
+        result = []
+        for g in games:
+            home = g.get("homeTeam", {})
+            away = g.get("awayTeam", {})
+            result.append({
+                "game_id":   g.get("gameId", ""),
+                "home_team": home.get("teamTricode", ""),
+                "away_team": away.get("teamTricode", ""),
+                "matchup":   f"{away.get('teamTricode','')} @ {home.get('teamTricode','')}",
+                "status":    g.get("gameStatusText", ""),
+            })
+        print(f"  [injury] CDN scoreboard: {len(result)} games today")
+        return result
     except Exception as e:
-        print(f"  [injury] NBA API error: {e}")
-        return None
+        print(f"  [injury] CDN scoreboard: {type(e).__name__}: {str(e)[:80]}")
+        return []
 
 
-def _fetch_from_nba_api_lib(date_str: str) -> list[dict] | None:
-    """Use nba_api library as alternative endpoint."""
+def _fetch_today_games_nba_api(date_str: str) -> list[dict]:
+    """Fallback: nba_api ScoreboardV3 -- same call V14 uses for grading."""
     try:
-        from nba_api.stats.endpoints import leagueinjurystatus
+        from nba_api.stats.endpoints import ScoreboardV3
         time.sleep(1)
-        resp = leagueinjurystatus.LeagueInjuryStatus(league_id="00")
-        df = resp.get_data_frames()[0]
-        if df.empty:
-            return None
-        return df.to_dict("records")
+        sb = ScoreboardV3(game_date=date_str, league_id="00")
+        gh = sb.game_header.get_data_frame()
+        if gh.empty:
+            return []
+        result = []
+        for _, row in gh.iterrows():
+            home = str(row.get("HOME_TEAM_ABBREVIATION", ""))
+            away = str(row.get("VISITOR_TEAM_ABBREVIATION", ""))
+            result.append({
+                "game_id":   str(row.get("GAME_ID", "")),
+                "home_team": home,
+                "away_team": away,
+                "matchup":   f"{away} @ {home}",
+                "status":    str(row.get("GAME_STATUS_TEXT", "")),
+            })
+        print(f"  [injury] nba_api ScoreboardV3: {len(result)} games")
+        return result
     except Exception as e:
-        print(f"  [injury] nba_api lib error: {e}")
-        return None
+        print(f"  [injury] ScoreboardV3: {type(e).__name__}: {str(e)[:80]}")
+        return []
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SECONDARY FETCH — NBA CMS PDF discovery + download
+# SOURCE 2: NBA CDN Boxscore -> inactives per game
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _discover_pdf_urls(date_str: str) -> list[str]:
+def _fetch_game_inactives(game: dict, fetch_ts: str) -> list[dict]:
     """
-    Enumerate likely NBA CMS PDF URLs for date_str.
-    NBA publishes 3–6 reports per day at standard time slots.
-    Pattern: Injury-Report_YYYY-MM-DD_HH_MMam/pm.pdf
+    Fetch inactives for one game using nba_api BoxScoreTraditionalV3.
+    This is the same call V14 uses for grading — proven UK-compatible.
+    Pre-game: returns all rostered players; inactives have status="INACTIVE"
+              or are listed in the inactive sub-list.
+    Post-game: returns players with minutes=0 as DNP (also treated as inactive).
     """
-    slots = [
-        "01_00AM","02_00AM","03_00AM","05_00AM","06_00AM",
-        "10_00AM","11_00AM","12_00PM","01_00PM","02_00PM",
-        "03_00PM","04_00PM","05_00PM","06_00PM","07_00PM",
-        "08_00PM","09_00PM","10_00PM","11_00PM",
-    ]
-    return [
-        f"{NBA_CMS_PDF_BASE}/Injury-Report_{date_str}_{slot}.pdf"
-        for slot in slots
-    ]
+    game_id  = game["game_id"]
+    home     = game["home_team"]
+    away     = game["away_team"]
+    matchup  = game["matchup"]
+    source_url  = f"nba_api://BoxScoreTraditionalV3/{game_id}"
+    source_hash = hashlib.sha256(game_id.encode()).hexdigest()[:16]
 
-
-def _probe_pdf_urls(date_str: str) -> list[str]:
-    """
-    HEAD-probe candidate PDF URLs. Return those that exist (200 OK).
-    Respectful: 0.3s delay between probes.
-    """
-    candidates = _discover_pdf_urls(date_str)
-    found = []
-    for url in candidates:
-        try:
-            r = requests.head(url, timeout=8)
-            if r.status_code == 200:
-                found.append(url)
-        except Exception:
-            pass
-        time.sleep(0.3)
-    return found
-
-
-def _download_pdf(url: str) -> bytes | None:
-    """Download PDF bytes. Returns None on failure."""
     try:
-        r = requests.get(url, timeout=30)
-        r.raise_for_status()
-        return r.content
+        from nba_api.stats.endpoints import BoxScoreTraditionalV3
+        time.sleep(0.8)   # V14 uses 0.8s between box calls
+        box = BoxScoreTraditionalV3(game_id=game_id)
+        ps  = box.player_stats.get_data_frame()
+
+        if ps is None or ps.empty:
+            print(f"  [injury]   {matchup}: no data yet (pre-game roster not loaded)")
+            return []
+
+        rows = []
+        for _, row in ps.iterrows():
+            # Build player name from firstName + familyName columns
+            fn    = str(row.get("firstName",   row.get("FN",  ""))).strip()
+            ln    = str(row.get("familyName",  row.get("LN",  ""))).strip()
+            pname = f"{fn} {ln}".strip()
+            if not pname:
+                continue
+
+            team_code  = str(row.get("teamTricode",       row.get("TEAM_ABBREVIATION", ""))).strip()
+            opp        = away if team_code == home else home
+            status_raw = str(row.get("status", "")).strip()
+
+            # Determine active/inactive
+            # "INACTIVE" status = not in game
+            # minutes=0 post-game = DNP (also inactive for prop purposes)
+            from rolling_engine import _parse_min
+            mins = _parse_min(row.get("minutes", row.get("MR", 0)))
+
+            if status_raw.upper() == "INACTIVE":
+                status_norm = "INACTIVE"
+            elif mins <= 0 and status_raw.upper() not in ("", "ACTIVE"):
+                status_norm = "INACTIVE"
+            else:
+                status_norm = "ACTIVE"
+
+            rows.append(_make_row(pname, team_code, opp, matchup, game_id,
+                                  status_raw or status_norm, status_norm,
+                                  source_url, source_hash, fetch_ts))
+
+        inactive_ct = sum(1 for r in rows if r["status_normalized"] == "INACTIVE")
+        print(f"  [injury]   {matchup}: {len(rows)} players, {inactive_ct} inactive")
+        return rows
+
     except Exception as e:
-        print(f"  [injury] PDF download error: {e}")
-        return None
+        print(f"  [injury]   {matchup} ({game_id}): {type(e).__name__}: {str(e)[:80]}")
+        return []
 
 
-def _parse_pdf_bytes(pdf_bytes: bytes, source_url: str) -> list[dict]:
-    """
-    Parse NBA injury report PDF using pdfplumber.
-    Returns list of raw dicts with team, player, status, reason fields.
-    """
-    rows = []
-    try:
-        import io
-        import pdfplumber
-
-        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
-            for page in pdf.pages:
-                # Try table extraction first
-                tables = page.extract_tables()
-                for table in tables:
-                    for row in table:
-                        if not row or len(row) < 4:
-                            continue
-                        # NBA PDF columns: Game Date | Game Time | Matchup | Team | Player | Status | Reason
-                        # Column positions vary — use heuristics
-                        cleaned = [str(c or "").strip() for c in row]
-                        # Skip header rows
-                        if any(h in cleaned[0].upper() for h in
-                               ["GAME DATE","TEAM","STATUS","REPORT"]):
-                            continue
-                        # NOT YET SUBMITTED rows
-                        joined = " ".join(cleaned).upper()
-                        if "NOT YET SUBMITTED" in joined:
-                            rows.append({
-                                "team": cleaned[0] if len(cleaned) > 0 else "",
-                                "player": "NOT YET SUBMITTED",
-                                "status_raw": "NOT YET SUBMITTED",
-                                "reason_raw": "",
-                                "source_url": source_url,
-                            })
-                            continue
-                        # Standard row — try to find player name (longest non-empty field)
-                        if len(cleaned) >= 5:
-                            rows.append({
-                                "team":       cleaned[-4] if len(cleaned) >= 4 else "",
-                                "player":     cleaned[-3] if len(cleaned) >= 3 else "",
-                                "status_raw": cleaned[-2] if len(cleaned) >= 2 else "",
-                                "reason_raw": cleaned[-1] if len(cleaned) >= 1 else "",
-                                "source_url": source_url,
-                            })
-    except Exception as e:
-        print(f"  [injury] PDF parse error: {e}")
-
-    return rows
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ROW NORMALISATION
-# ─────────────────────────────────────────────────────────────────────────────
-
-def _normalise_api_row(raw: dict, report_ts: str, source_url: str, source_hash: str) -> dict:
-    """
-    Normalise a row from the NBA API response into the standard schema.
-    NBA API field names vary — handle both snake_case and CamelCase.
-    """
-    def _g(row, *keys):
-        for k in keys:
-            v = row.get(k) or row.get(k.lower()) or row.get(k.upper())
-            if v is not None:
-                return str(v).strip()
-        return ""
-
-    player_raw  = _g(raw, "PlayerName", "PLAYER_NAME", "player_name", "Name")
-    team_raw    = _g(raw, "TeamName", "TEAM_NAME", "team_name", "Team", "TeamCity")
-    status_raw  = _g(raw, "PlayerStatus", "PLAYER_STATUS", "Status", "InjuryStatus")
-    reason_raw  = _g(raw, "InjuryDescription", "INJURY_DESCRIPTION", "Reason",
-                     "InjuryReason", "Comment")
-    game_date   = _g(raw, "GameDate", "GAME_DATE", "game_date")
-    game_time   = _g(raw, "GameTime", "GAME_TIME", "game_time")
-    matchup     = _g(raw, "Matchup", "MATCHUP", "matchup")
-    opponent    = _g(raw, "Opponent", "OPPONENT", "opponent")
-
-    player_norm = normalize_name(player_raw)
-    status_norm = normalize_status(status_raw)
-    reason_cat  = categorize_reason(reason_raw)
-
-    now_ts = datetime.now(timezone.utc).isoformat()
-
+def _make_row(player_name, team, opponent, matchup, game_id,
+              status_raw, status_normalized, source_url, source_hash, fetch_ts) -> dict:
     return {
-        "report_ts":              report_ts,
-        "report_date":            report_ts[:10] if report_ts else "",
-        "game_date":              game_date,
-        "game_time_local":        game_time,
+        "fetch_ts":               fetch_ts,
+        "game_date":              today_et(),
+        "game_id":                game_id,
         "matchup":                matchup,
-        "team":                   team_raw,
+        "team":                   team,
         "opponent":               opponent,
-        "player_name":            player_raw,
-        "player_name_normalized": player_norm,
+        "player_name":            player_name,
+        "player_name_normalized": normalize_player_name(player_name),
+        "status_normalized":      status_normalized,
         "status_raw":             status_raw,
-        "status_normalized":      status_norm,
-        "reason_raw":             reason_raw,
-        "reason_category":        reason_cat,
         "source_url":             source_url,
-        "source_file_name":       source_url.split("/")[-1] if source_url else "",
         "source_hash":            source_hash,
-        "first_seen_ts":          now_ts,
-        "last_seen_ts":           now_ts,
-        "is_latest":              True,
+        "first_seen_ts":          fetch_ts,
+        "last_seen_ts":           fetch_ts,
         "status_changed":         False,
     }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STORAGE — current state + append-only history + manifest
+# STATE MANAGEMENT
 # ─────────────────────────────────────────────────────────────────────────────
 
-_HISTORY_COLS = [
-    "report_ts","report_date","game_date","game_time_local","matchup",
-    "team","opponent","player_name","player_name_normalized",
-    "status_raw","status_normalized","reason_raw","reason_category",
-    "source_url","source_file_name","source_hash",
-    "first_seen_ts","last_seen_ts","is_latest","status_changed",
-]
-
-
 def _load_current() -> dict:
-    """Load injuries_current.json → dict keyed by player_name_normalized."""
-    if FILE_INJURIES_CURRENT.exists():
-        try:
-            return json.load(open(FILE_INJURIES_CURRENT))
-        except Exception:
-            return {}
-    return {}
+    if not FILE_INJURIES_CURRENT.exists():
+        return {}
+    try:
+        data = json.loads(FILE_INJURIES_CURRENT.read_text())
+        if isinstance(data, dict) and "players" in data:
+            return {p["player_name_normalized"]: p
+                    for p in data["players"] if p.get("player_name_normalized")}
+        return data
+    except Exception:
+        return {}
 
 
 def _save_current(state: dict) -> None:
     FILE_INJURIES_CURRENT.parent.mkdir(parents=True, exist_ok=True)
-    with open(FILE_INJURIES_CURRENT, "w") as f:
-        json.dump(state, f, indent=2)
+    out = {
+        "generated_ts": datetime.now(timezone.utc).isoformat(),
+        "n_players":    len(state),
+        "players":      list(state.values()),
+    }
+    FILE_INJURIES_CURRENT.write_text(json.dumps(out, indent=2, default=str))
 
 
 def _append_history(rows: list[dict]) -> None:
-    """Append rows to injury_report_history.csv (append-only)."""
     FILE_INJURY_HISTORY.parent.mkdir(parents=True, exist_ok=True)
     write_header = not FILE_INJURY_HISTORY.exists()
     with open(FILE_INJURY_HISTORY, "a", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=_HISTORY_COLS, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=HISTORY_COLUMNS, extrasaction="ignore")
         if write_header:
             w.writeheader()
         w.writerows(rows)
 
 
-def _load_manifest() -> list[dict]:
-    if FILE_INJURY_MANIFEST.exists():
-        try:
-            return json.load(open(FILE_INJURY_MANIFEST))
-        except Exception:
-            return []
-    return []
+def _load_manifest() -> list:
+    if not FILE_INJURY_MANIFEST.exists():
+        return []
+    try:
+        return json.loads(FILE_INJURY_MANIFEST.read_text())
+    except Exception:
+        return []
 
 
-def _save_manifest(manifest: list[dict]) -> None:
+def _save_manifest(m: list) -> None:
     FILE_INJURY_MANIFEST.parent.mkdir(parents=True, exist_ok=True)
-    with open(FILE_INJURY_MANIFEST, "w") as f:
-        json.dump(manifest, f, indent=2)
+    FILE_INJURY_MANIFEST.write_text(json.dumps(m[-500:], indent=2, default=str))
 
 
-def _content_hash(content: bytes | str) -> str:
-    if isinstance(content, str):
-        content = content.encode()
-    return hashlib.sha256(content).hexdigest()[:16]
+def _content_hash(rows: list[dict]) -> str:
+    key = json.dumps(
+        sorted([(r.get("player_name",""), r.get("status_normalized","")) for r in rows]),
+        sort_keys=True
+    )
+    return hashlib.sha256(key.encode()).hexdigest()[:16]
 
-
-def _already_processed(source_hash: str, manifest: list[dict]) -> bool:
-    return any(m.get("source_hash") == source_hash for m in manifest)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# CHANGE DETECTION
-# ─────────────────────────────────────────────────────────────────────────────
 
 def _detect_changes(new_rows: list[dict], old_state: dict) -> tuple[list[dict], list[str]]:
-    """
-    Compare new rows against old current state.
-    Mark status_changed=True when a player's status differs from previous.
-    Returns (updated_rows, list of change description strings).
-    """
     changes = []
     for row in new_rows:
-        key = row["player_name_normalized"]
-        old = old_state.get(key)
-        if old and old.get("status_normalized") != row["status_normalized"]:
+        key  = row.get("player_name_normalized", "")
+        prev = old_state.get(key)
+        if prev and prev.get("status_normalized") != row.get("status_normalized"):
             row["status_changed"] = True
-            row["first_seen_ts"]  = old.get("first_seen_ts", row["first_seen_ts"])
+            row["first_seen_ts"]  = prev.get("first_seen_ts", row["fetch_ts"])
             changes.append(
-                f"{row['player_name']}: {old.get('status_normalized','?')} → "
-                f"{row['status_normalized']} ({row['reason_raw'][:50]})"
+                f"{row['player_name']} ({row['team']}): "
+                f"{prev['status_normalized']} -> {row['status_normalized']}"
             )
-        elif old:
-            row["first_seen_ts"] = old.get("first_seen_ts", row["first_seen_ts"])
+        elif prev:
+            row["first_seen_ts"] = prev.get("first_seen_ts", row["fetch_ts"])
     return new_rows, changes
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# MAIN FETCH ORCHESTRATOR
+# MAIN ENTRY POINT
 # ─────────────────────────────────────────────────────────────────────────────
 
-def fetch_and_store(date_str: str | None = None) -> dict:
+def fetch_and_store(date_str: Optional[str] = None) -> dict:
     """
-    Main entry point. Fetch latest NBA injury report, normalise, store.
-    Returns summary dict: {rows, changes, source, cached, error}.
-
-    Fail-safe: on any error, returns cached data with error flag.
+    Main entry point. Fetch today's NBA inactives and update output files.
+    Uses NBA CDN (public, not geo-blocked) with nba_api as fallback.
     """
-    if date_str is None:
-        from config import today_et
-        date_str = today_et()
+    date_str  = date_str or today_et()
+    fetch_ts  = datetime.now(timezone.utc).isoformat()
+    old_state = _load_current()
+    manifest  = _load_manifest()
 
-    fetch_ts = datetime.now(timezone.utc).isoformat()
     log_event("INJ", "FETCH_START", detail=f"date={date_str}")
 
-    manifest   = _load_manifest()
-    old_state  = _load_current()
+    # Step 1: Get today's games
+    print(f"  [injury] Fetching games for {date_str}...")
+    games = _fetch_today_games_cdn()
 
-    # ── Try primary source: nba_api library ──────────────────────────────────
-    raw_rows = None
-    source_url = f"nba_api://leagueinjurystatus/{date_str}"
-    source_label = "nba_api_lib"
+    if not games:
+        print("  [injury] CDN failed -- trying nba_api ScoreboardV3...")
+        games = _fetch_today_games_nba_api(date_str)
 
-    raw_rows = _fetch_from_nba_api_lib(date_str)
-    if not raw_rows:
-        # Try direct stats API endpoint
-        raw_rows = _fetch_from_nba_api(date_str)
-        source_label = "nba_api_direct"
-
-    # ── If API failed, return cached state ───────────────────────────────────
-    if not raw_rows:
-        print(f"  [injury] ⚠ All sources failed — using cached state ({len(old_state)} players)")
-        log_event("INJ", "FETCH_FAILED_USING_CACHE", detail=f"date={date_str} cached={len(old_state)}")
-        return {"rows": len(old_state), "changes": [], "source": "cache",
-                "cached": True, "error": True}
-
-    # ── Hash for dedup ────────────────────────────────────────────────────────
-    content_str = json.dumps(raw_rows, sort_keys=True)
-    report_hash = _content_hash(content_str.encode())
-
-    if _already_processed(report_hash, manifest):
-        print(f"  [injury] No new report (hash match) — {len(old_state)} players in cache")
-        log_event("INJ", "FETCH_NO_CHANGE", detail=f"hash={report_hash}")
-        return {"rows": len(old_state), "changes": [], "source": source_label,
+    if not games:
+        print(f"  [injury] No games found for {date_str}")
+        print(f"  [injury] Note: NBA only publishes data on game days during the season")
+        log_event("INJ", "NO_GAMES", detail=f"date={date_str}")
+        return {"n_rows": len(old_state), "n_changed": 0, "status": "NO_GAMES",
+                "source": "none", "rows": len(old_state), "changes": [],
                 "cached": True, "error": False}
 
-    # ── Normalise rows ────────────────────────────────────────────────────────
-    normalised = []
-    for raw in raw_rows:
-        try:
-            row = _normalise_api_row(raw, fetch_ts, source_url, report_hash)
-            if row["player_name"] and row["player_name"] != "NOT YET SUBMITTED":
-                normalised.append(row)
-        except Exception:
+    # Step 2: Fetch inactives per game
+    all_rows: list[dict] = []
+    for game in games:
+        time.sleep(0.5)
+        rows = _fetch_game_inactives(game, fetch_ts)
+        all_rows.extend(rows)
+
+    if not all_rows:
+        print(f"  [injury] Got {len(games)} games but 0 player rows")
+        print(f"  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)")
+        return {"n_rows": len(old_state), "n_changed": 0, "status": "NOT_READY",
+                "source": "cdn", "rows": len(old_state), "changes": [],
+                "cached": True, "error": False}
+
+    # Step 3: Dedup
+    content_hash = _content_hash(all_rows)
+    if manifest and manifest[-1].get("source_hash") == content_hash:
+        print(f"  [injury] No change since last fetch ({len(all_rows)} players)")
+        return {"n_rows": len(all_rows), "n_changed": 0, "status": "UNCHANGED",
+                "source": "cdn", "rows": len(all_rows), "changes": [],
+                "cached": True, "error": False}
+
+    # Step 4: Change detection
+    all_rows, changes = _detect_changes(all_rows, old_state)
+
+    # Step 5: Build new state (prefer INACTIVE over ACTIVE on dedup)
+    new_state: dict = {}
+    for row in all_rows:
+        key = row.get("player_name_normalized", "")
+        if not key:
             continue
+        existing = new_state.get(key)
+        if existing is None or row["status_normalized"] == "INACTIVE":
+            new_state[key] = row
 
-    if not normalised:
-        print(f"  [injury] ⚠ Fetch returned data but 0 rows normalised")
-        log_event("INJ", "PARSE_EMPTY", detail=f"date={date_str}")
-        return {"rows": 0, "changes": [], "source": source_label,
-                "cached": False, "error": True}
-
-    # ── Change detection ──────────────────────────────────────────────────────
-    normalised, changes = _detect_changes(normalised, old_state)
-
-    # ── Update current state ──────────────────────────────────────────────────
-    # Mark all existing as not latest, then overwrite with new
-    new_state = {r["player_name_normalized"]: r for r in normalised}
+    # Step 6: Save
     _save_current(new_state)
-
-    # ── Append history ────────────────────────────────────────────────────────
-    _append_history(normalised)
-
-    # ── Update manifest ───────────────────────────────────────────────────────
+    _append_history(all_rows)
     manifest.append({
-        "fetch_ts":      fetch_ts,
-        "report_date":   date_str,
-        "source_url":    source_url,
-        "source_label":  source_label,
-        "source_hash":   report_hash,
-        "rows_parsed":   len(normalised),
-        "players_unique": len(new_state),
-        "changes":       len(changes),
-        "status":        "ok",
+        "fetch_ts":    fetch_ts,
+        "game_date":   date_str,
+        "n_games":     len(games),
+        "n_players":   len(new_state),
+        "source_hash": content_hash,
+        "n_changed":   len(changes),
+        "status":      "ok",
     })
     _save_manifest(manifest)
 
-    # ── Audit + summary ───────────────────────────────────────────────────────
-    out_ct = sum(1 for r in normalised if r["status_normalized"] == "OUT")
-    q_ct   = sum(1 for r in normalised if r["status_normalized"] == "QUESTIONABLE")
-    d_ct   = sum(1 for r in normalised if r["status_normalized"] == "DOUBTFUL")
-
-    log_event("INJ", "FETCH_OK",
-              detail=f"rows={len(normalised)} out={out_ct} q={q_ct} d={d_ct} changes={len(changes)}")
-
-    print(f"  [injury] {len(normalised)} players  |  "
-          f"OUT={out_ct}  Q={q_ct}  D={d_ct}  changes={len(changes)}")
+    inactive_ct = sum(1 for v in new_state.values() if v["status_normalized"] == "INACTIVE")
+    active_ct   = sum(1 for v in new_state.values() if v["status_normalized"] == "ACTIVE")
 
     if changes:
         for c in changes[:5]:
-            print(f"    ⚡ {c}")
-        if len(changes) > 5:
-            print(f"    ... and {len(changes)-5} more")
+            print(f"    STATUS CHANGE: {c}")
 
+    log_event("INJ", "FETCH_OK",
+              detail=f"players={len(new_state)} inactive={inactive_ct} changes={len(changes)}")
+    print(f"  [injury] Done: {len(new_state)} players | INACTIVE={inactive_ct} ACTIVE={active_ct} | {len(changes)} changes")
+
+    return {"n_rows": len(new_state), "n_changed": len(changes), "status": "OK",
+            "source": "cdn", "rows": len(new_state), "changes": changes,
+            "cached": False, "error": False}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QUERY INTERFACE (used by batch_predict and reasoning_engine)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def load_injury_state(date_str: Optional[str] = None) -> dict:
+    """Load current state. Fetches if no cached state exists."""
+    state = _load_current()
+    if not state:
+        print("  [injury] No cached state -- fetching...")
+        fetch_and_store(date_str)
+        state = _load_current()
+    return state
+
+
+# Alias
+get_current_injuries = load_injury_state
+
+
+def get_team_injury_summary(injury_state: dict, team: str) -> dict:
+    """Team-level availability summary for reasoning engine."""
+    team_rows = [v for v in injury_state.values()
+                 if v.get("team", "").upper() == team.upper()]
+    inactive  = [v["player_name"] for v in team_rows if v.get("status_normalized") == "INACTIVE"]
+    n = len(inactive)
     return {
-        "rows":    len(normalised),
-        "changes": changes,
-        "source":  source_label,
-        "cached":  False,
-        "error":   False,
+        "n_inactive": n, "inactive_players": inactive,
+        "has_star_out": n > 0,
+        "risk_level": "HIGH" if n >= 2 else "MEDIUM" if n == 1 else "NONE",
+        # Backwards-compat aliases for reasoning_engine
+        "n_out": n, "n_questionable": 0, "n_doubtful": 0,
+        "out_players": inactive, "questionable_players": [],
     }
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# QUERY FUNCTIONS (used by batch_predict and reasoning_engine)
-# ─────────────────────────────────────────────────────────────────────────────
-
-def load_injury_state(date_str: str | None = None) -> dict:
-    """
-    Load latest injury state for date_str.
-    Returns dict keyed by player_name_normalized → injury row.
-    If no cached data exists, attempts a fresh fetch.
-    Fail-safe: returns {} on complete failure.
-    """
-    if FILE_INJURIES_CURRENT.exists():
-        try:
-            state = json.load(open(FILE_INJURIES_CURRENT))
-            # Filter to rows for date_str if provided
-            if date_str:
-                filtered = {k: v for k, v in state.items()
-                            if not v.get("game_date") or v.get("game_date") == date_str
-                            or v.get("report_date") == date_str}
-                return filtered if filtered else state
-            return state
-        except Exception:
-            pass
-
-    # No cache — attempt fresh fetch
-    print("  [injury] No cached state — fetching...")
-    fetch_and_store(date_str)
-    try:
-        return json.load(open(FILE_INJURIES_CURRENT))
-    except Exception:
-        return {}
-
-
-def get_player_injury_status(injury_state: dict, player_name: str) -> str:
-    """
-    Look up a player's current injury status.
-    Returns status_normalized string: OUT, QUESTIONABLE, DOUBTFUL, PROBABLE,
-    AVAILABLE, NOT_YET_SUBMITTED, UNKNOWN, or "" if not in report.
-    """
-    key = normalize_name(player_name)
-    row = injury_state.get(key)
-    if row is None:
-        # Try fuzzy: check if key is a substring of any name in state
-        for k, v in injury_state.items():
-            if key in k or k in key:
-                return v.get("status_normalized", "")
-    return row.get("status_normalized", "") if row else ""
 
 
 def get_teammate_load_boost(
     injury_state: dict,
     home_team: str,
     away_team: str,
-    player_name: str,
+    player_name_norm: str,
     usage_threshold: float = 0.25,
 ) -> float:
-    """
-    Compute teammate load boost for player_name.
-    Returns a continuous score 0.0–1.0:
-      0.0 = no boost (no OUT teammates with significant usage)
-      0.5 = one notable teammate OUT
-      1.0 = multiple high-usage teammates OUT
-
-    Logic: if a teammate on the same team is OUT and had usage > threshold,
-    the player may absorb minutes/shots. This is the highest-value V18 signal.
-
-    Note: teammate usage is estimated from team name matching in injury report.
-    For precise usage, would need lineup data — this is a useful approximation.
-    """
-    out_count = 0
-    # Find teammates who are OUT
-    for key, row in injury_state.items():
-        if row.get("status_normalized") != "OUT":
-            continue
-        # Check if on same team (compare team name)
-        team = row.get("team", "").lower()
-        our_teams = [home_team.lower(), away_team.lower()]
-        if not any(t in team or team in t for t in our_teams if t):
-            continue
-        # Skip the player themselves
-        if normalize_name(row.get("player_name", "")) == normalize_name(player_name):
-            continue
-        out_count += 1
-
-    if out_count == 0:
+    """Return pts boost if a teammate is INACTIVE on the same team."""
+    from config import TEAMMATE_BOOST_MAGNITUDE
+    player_entry = injury_state.get(player_name_norm)
+    if not player_entry:
         return 0.0
-    elif out_count == 1:
-        return 0.5
-    else:
-        return min(1.0, 0.5 + (out_count - 1) * 0.2)
-
-
-def get_point_in_time_status(
-    player_name: str,
-    as_of_ts: str,
-    game_date: str | None = None,
-) -> dict | None:
-    """
-    Point-in-time query: what was the injury status for player_name
-    as of timestamp as_of_ts?
-
-    Used by backtests to avoid leakage — only use reports published
-    BEFORE the prediction was made.
-
-    Returns the most recent injury row with report_ts <= as_of_ts.
-    Returns None if no record found before that timestamp.
-    """
-    if not FILE_INJURY_HISTORY.exists():
-        return None
-
-    player_key = normalize_name(player_name)
-    best = None
-    best_ts = ""
-
-    try:
-        with open(FILE_INJURY_HISTORY, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if row.get("player_name_normalized") != player_key:
-                    continue
-                if game_date and row.get("game_date") != game_date:
-                    continue
-                row_ts = row.get("report_ts", "")
-                if row_ts <= as_of_ts and (best is None or row_ts > best_ts):
-                    best = row
-                    best_ts = row_ts
-    except Exception:
-        return None
-
-    return best
-
-
-def get_team_injury_summary(injury_state: dict, team: str) -> dict:
-    """
-    Summary of injury status for a team — used by reasoning engine.
-    Returns: {out: [names], questionable: [names], doubtful: [names], total_affected: int}
-    """
-    result: dict = {"out": [], "questionable": [], "doubtful": [], "total_affected": 0}
-    team_lower = team.lower()
-    for key, row in injury_state.items():
-        row_team = row.get("team", "").lower()
-        if not (team_lower in row_team or row_team in team_lower):
-            continue
-        status = row.get("status_normalized", "")
-        name   = row.get("player_name", key)
-        if status == "OUT":
-            result["out"].append(name)
-        elif status == "QUESTIONABLE":
-            result["questionable"].append(name)
-        elif status == "DOUBTFUL":
-            result["doubtful"].append(name)
-    result["total_affected"] = (
-        len(result["out"]) + len(result["questionable"]) + len(result["doubtful"])
-    )
-    return result
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# VOL_RISK ANALYSIS (P-4 — gate validation against historical data)
-# ─────────────────────────────────────────────────────────────────────────────
-
-def run_volrisk_analysis(season_json_path: Path) -> None:
-    """
-    P-4: Analyse plays that were blocked from T1/T2 by the vol_risk gate.
-    Checks old gate (vol_risk>1.5) vs new gate (std10>9) against actual results.
-    Run once manually: python3 injury_ingest.py volrisk-analysis
-    """
-    import json as _json
-
-    if not season_json_path.exists():
-        print(f"  ✗ Not found: {season_json_path}")
-        return
-
-    plays = _json.load(open(season_json_path))
-    graded = [p for p in plays if p.get("result") in ("WIN","LOSS")]
-
-    if not graded:
-        print("  No graded plays found.")
-        return
-
-    old_blocked = []  # blocked by old gate (vol_risk>1.5) but not new (std10>9)
-    new_blocked = []  # still blocked by new gate (std10>9)
-    would_upgrade = []  # old blocked → now T1/T2 eligible
-
-    for p in graded:
-        vol_risk = p.get("volRisk", 0) or 0
-        std10    = p.get("std10", 5) or 5
-        gap      = p.get("predGap", 0) or 0
-        fc       = p.get("conf", 0) or 0
-        tier     = p.get("tierLabel", "T3")
-
-        old_hv = (std10 > 8) or (vol_risk > 1.5)
-        new_hv = std10 > 9
-
-        # Would this play have been T1 eligible under new gate?
-        could_be_t1 = (fc >= 0.63 and gap >= 3.0 and std10 <= 8)
-
-        if old_hv and not new_hv and could_be_t1:
-            would_upgrade.append(p)
-        if old_hv:
-            old_blocked.append(p)
-        if new_hv:
-            new_blocked.append(p)
-
-    print(f"\n  VOL_RISK GATE ANALYSIS — {season_json_path.name}")
-    print(f"  {'─'*55}")
-    print(f"  Total graded plays:       {len(graded):>6}")
-    print(f"  Blocked by OLD gate:      {len(old_blocked):>6}  (std10>8 OR vol_risk>1.5)")
-    print(f"  Blocked by NEW gate:      {len(new_blocked):>6}  (std10>9 only)")
-    print(f"  Would upgrade to T1/T2:   {len(would_upgrade):>6}  (freed by gate change)")
-
-    if would_upgrade:
-        wins   = sum(1 for p in would_upgrade if p.get("result") == "WIN")
-        losses = len(would_upgrade) - wins
-        hr     = wins / len(would_upgrade) * 100 if would_upgrade else 0
-        print(f"\n  Freed plays performance:")
-        print(f"    {wins}W / {losses}L = {hr:.1f}% HR")
-        if hr >= 62:
-            print(f"    ✓ Gate change VALIDATED — freed plays hit at {hr:.1f}% (above T1 threshold)")
-        elif hr >= 55:
-            print(f"    ⚠ Marginal — freed plays hit at {hr:.1f}% (T2 range)")
-        else:
-            print(f"    ✗ Gate change NOT validated — freed plays only {hr:.1f}%")
-
-    print()
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# POLLING CADENCE HELPER
-# ─────────────────────────────────────────────────────────────────────────────
-
-def should_poll_now(date_str: str | None = None) -> tuple[bool, str]:
-    """
-    Return (should_poll, reason) based on NBA injury reporting windows.
-    NBA windows (ET):
-      Day-before: after 5pm ET
-      Game-day morning: 11am–1pm ET
-      Pre-tip final: 2hrs before first tip
-    UK times (ET+5 summer / ET+4 winter — approximate):
-      Day-before: after 22:00 UK
-      Game-day morning: 16:00–18:00 UK
-      Pre-tip: 18:00–21:00 UK (covers 1pm–4pm ET tips)
-    """
-    from zoneinfo import ZoneInfo
-    now_uk = datetime.now(ZoneInfo("Europe/London"))
-    hour   = now_uk.hour
-
-    # Off-hours — no NBA games typically start before 6pm ET (23:00 UK)
-    if hour < 11:
-        return False, "too early (before 11:00 UK)"
-    if hour >= 23:
-        return False, "after last tip window"
-
-    # Game-day morning window (UK 16:00–18:00)
-    if 16 <= hour < 18:
-        return True, "game-day morning window (16:00–18:00 UK)"
-
-    # Pre-tip window (UK 18:00–22:00)
-    if 18 <= hour < 23:
-        return True, "pre-tip window (18:00–23:00 UK)"
-
-    # Day-before evening (UK 20:00–23:00)
-    if 20 <= hour:
-        return True, "day-before evening window (20:00+ UK)"
-
-    # Mid-day (11:00–16:00) — light polling
-    if 11 <= hour < 16:
-        return True, "mid-day light polling"
-
-    return False, "outside polling window"
+    my_team = player_entry.get("team", "")
+    if not my_team:
+        return 0.0
+    inactive_teammates = [
+        v for v in injury_state.values()
+        if v.get("team", "").upper() == my_team.upper()
+        and v.get("status_normalized") == "INACTIVE"
+        and v.get("player_name_normalized", "") != player_name_norm
+    ]
+    return float(TEAMMATE_BOOST_MAGNITUDE) if inactive_teammates else 0.0
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -854,97 +482,26 @@ def should_poll_now(date_str: str | None = None) -> tuple[bool, str]:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main():
-    import argparse, sys
-    from config import FILE_SEASON_2526
-
-    parser = argparse.ArgumentParser(description="PropEdge V18 — Injury Ingest")
-    parser.add_argument("command", nargs="?", default="fetch",
-                        choices=["fetch","status","changes","history",
-                                 "poll-check","volrisk-analysis","help"])
-    parser.add_argument("--date",   help="YYYY-MM-DD (default: today ET)")
-    parser.add_argument("--player", help="Player name (for history command)")
-    parser.add_argument("--force",  action="store_true", help="Force fetch even if no-op")
+    parser = argparse.ArgumentParser(description="PropEdge V18 -- Injury Ingest")
+    parser.add_argument("--status", action="store_true", help="Show state, no fetch")
+    parser.add_argument("--date",   type=str, default=None)
     args = parser.parse_args()
 
-    if args.command == "fetch":
-        if not args.force:
-            should, reason = should_poll_now(args.date)
-            if not should:
-                print(f"  [injury] Skipping — {reason}")
-                return
-        result = fetch_and_store(args.date)
-        print(f"  Result: {result}")
-
-    elif args.command == "status":
-        state = load_injury_state(args.date)
-        if not state:
-            print("  No injury data cached.")
-            return
-        out_list  = [(k,v) for k,v in state.items() if v.get("status_normalized")=="OUT"]
-        q_list    = [(k,v) for k,v in state.items() if v.get("status_normalized")=="QUESTIONABLE"]
-        d_list    = [(k,v) for k,v in state.items() if v.get("status_normalized")=="DOUBTFUL"]
-        print(f"\n  Injury Status ({args.date or 'latest'})")
-        print(f"  {'─'*50}")
-        for label, lst in [("OUT",out_list),("QUESTIONABLE",q_list),("DOUBTFUL",d_list)]:
-            if lst:
-                print(f"\n  {label} ({len(lst)}):")
-                for _, v in lst:
-                    print(f"    {v.get('player_name','?'):<28} {v.get('team',''):<20} {v.get('reason_raw','')[:40]}")
-
-    elif args.command == "changes":
-        manifest = _load_manifest()
-        if not manifest:
-            print("  No manifest found.")
-            return
-        last = manifest[-1]
-        print(f"  Last report: {last.get('fetch_ts','')} | {last.get('changes',0)} changes")
-        # Read most recent changed rows from history
-        changed = []
-        if FILE_INJURY_HISTORY.exists():
-            with open(FILE_INJURY_HISTORY, newline="", encoding="utf-8") as f:
-                for row in csv.DictReader(f):
-                    if row.get("status_changed") == "True":
-                        changed.append(row)
-        if changed:
-            print(f"\n  Recent status changes:")
-            for r in changed[-10:]:
-                print(f"    {r.get('player_name','?'):<28} → {r.get('status_normalized','?')} "
-                      f"({r.get('report_ts','')[:16]})")
-
-    elif args.command == "history":
-        name = args.player or (sys.argv[2] if len(sys.argv) > 2 else "")
-        if not name:
-            print("  Usage: injury_ingest.py history --player 'Player Name'")
-            return
-        key = normalize_name(name)
-        if FILE_INJURY_HISTORY.exists():
-            rows = []
-            with open(FILE_INJURY_HISTORY, newline="", encoding="utf-8") as f:
-                for row in csv.DictReader(f):
-                    if row.get("player_name_normalized") == key:
-                        rows.append(row)
-            if rows:
-                print(f"\n  Injury history for {name} ({len(rows)} records):")
-                for r in rows[-20:]:
-                    print(f"    {r.get('report_ts','')[:16]}  {r.get('status_normalized','?'):<15} "
-                          f"{r.get('reason_raw','')[:40]}")
-            else:
-                print(f"  No history found for '{name}' (key: {key})")
-
-    elif args.command == "poll-check":
-        should, reason = should_poll_now(args.date)
-        print(f"  Should poll: {should} — {reason}")
-
-    elif args.command == "volrisk-analysis":
-        run_volrisk_analysis(FILE_SEASON_2526)
-
+    if args.status:
+        state    = load_injury_state(args.date)
+        inactive = [v for v in state.values() if v.get("status_normalized") == "INACTIVE"]
+        active   = [v for v in state.values() if v.get("status_normalized") == "ACTIVE"]
+        print(f"\n  NBA Inactives -- {args.date or today_et()}")
+        print(f"  {'--'*27}")
+        print(f"  INACTIVE ({len(inactive)}) -- will not play:")
+        for v in inactive[:20]:
+            print(f"    {v.get('player_name',''):<25} {v.get('team',''):<5} vs {v.get('opponent','')}")
+        print(f"  ACTIVE: {len(active)} confirmed playing")
+        print(f"  Total tracked: {len(state)}")
     else:
-        print(__doc__)
+        result = fetch_and_store(date_str=args.date)
+        print(f"\n  Result: {result['status']} | {result['n_rows']} players | {result['n_changed']} changes")
 
 
 if __name__ == "__main__":
     main()
-
-
-# Alias for backwards compatibility
-get_current_injuries = load_injury_state

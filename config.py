@@ -58,7 +58,7 @@ FILE_TRUST       = MODEL_DIR / "player_trust.json"
 # ─────────────────────────────────────────────────────────────────────────────
 # API
 # ─────────────────────────────────────────────────────────────────────────────
-ODDS_API_KEY    = "c0bab20a574208a41a6e0d930cdaf313"  # update if rotated
+ODDS_API_KEY    = "a77b14b513399a472139e58390aac514"  # update if rotated
 ODDS_BASE_URL   = "https://api.the-odds-api.com/v4"
 CREDIT_ALERT    = 170
 

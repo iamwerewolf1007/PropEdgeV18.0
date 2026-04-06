@@ -28,19 +28,9 @@ from rolling_engine import filter_played, extract_prediction_features, compute_c
 from dvp_updater import compute_and_save_dvp
 from reasoning_engine import generate_pre_match_reason
 from audit import log_event
-from injury_ingest import load_injury_state, get_player_injury_status, get_teammate_load_boost
 from model_trainer import ML_FEATURES
 
 import requests
-from injury_ingest import (
-    fetch_and_store as injury_fetch,
-    load_injury_state as get_current_injuries,
-    get_team_injury_summary,
-    get_teammate_load_boost,
-    normalize_player_name as normalize_injury_name,
-)
-from config import INJURY_CONF_PENALTY, TEAMMATE_BOOST_MAGNITUDE
-
 
 def _parse_batch() -> int:
     """Parse batch number from argv — safe even when imported by run.py."""
@@ -64,7 +54,6 @@ _NICKNAMES = {
 }
 _SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 
-
 def _norm(name: str) -> str:
     s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
     s = re.sub(r"[.'']", "", s)
@@ -74,7 +63,6 @@ def _norm(name: str) -> str:
         tokens[0] = _NICKNAMES[tokens[0]]
     return " ".join(tokens)
 
-
 def resolve_name(odds_name: str, player_index: dict) -> str | None:
     if odds_name in player_index:
         return odds_name
@@ -83,7 +71,6 @@ def resolve_name(odds_name: str, player_index: dict) -> str | None:
         if _norm(k) == n:
             return k
     return None
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LOAD MODELS
@@ -100,7 +87,6 @@ def load_models():
     except Exception as e:
         print(f"  ⚠ Model load error: {e}. Run `python3 run.py generate` first.")
     return clf, reg, cal, trust
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FETCH PROPS — Excel primary, Odds API fallback
@@ -140,7 +126,6 @@ def fetch_props_from_excel(date_str: str) -> list[dict]:
         print(f"  Excel read error: {e}")
         return []
 
-
 def fetch_props_from_api(date_str: str) -> list[dict]:
     """Fetch from The Odds API (fallback)."""
     fr_utc, to_utc = et_window(date_str)
@@ -160,12 +145,29 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
         print(f"  API events error: {e}")
         return []
 
+    from datetime import timezone as _tz
+    from zoneinfo import ZoneInfo as _ZI
+    _ET_ZONE = _ZI("America/New_York")
+
+    def _commence_to_et(ts: str) -> str:
+        """Convert Odds API UTC commence_time to ET display string e.g. '7:00 PM'."""
+        if not ts:
+            return ""
+        try:
+            from datetime import datetime as _dt
+            utc_dt = _dt.strptime(ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=_tz.utc)
+            et_dt  = utc_dt.astimezone(_ET_ZONE)
+            return et_dt.strftime("%-I:%M %p").upper()   # e.g. "7:00 PM"
+        except Exception:
+            return ""
+
     props = []
     for event in events:
         eid  = event["id"]
         home = event.get("home_team", "")
         away = event.get("away_team", "")
         game = f"{away} @ {home}"
+        game_time = _commence_to_et(event.get("commence_time", ""))
 
         try:
             odds_url = f"{ODDS_BASE_URL}/sports/basketball_nba/events/{eid}/odds"
@@ -215,6 +217,7 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
                 "game":       game,
                 "home":       home,
                 "away":       away,
+                "game_time":  game_time,
                 "line":       avg_line,
                 "over_odds":  od.get("over")  or -110,
                 "under_odds": od.get("under") or -110,
@@ -226,7 +229,6 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
 
     print(f"  Odds API: {len(props)} props for {date_str}")
     return props
-
 
 def append_to_excel(props: list[dict], date_str: str) -> None:
     """Append today's fetched props to the Excel source file."""
@@ -261,7 +263,6 @@ def append_to_excel(props: list[dict], date_str: str) -> None:
         print(f"  Excel updated: {len(combined)} total rows")
     except Exception as e:
         print(f"  Excel append error: {e}")
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SCORE ONE PLAY  (V14 Adaptive Fusion)
@@ -394,7 +395,6 @@ def score_play(
         "meanReversionRisk": feats.get("mean_reversion_risk", 0),
     }
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # SAVE / MERGE today.json
 # ─────────────────────────────────────────────────────────────────────────────
@@ -461,7 +461,6 @@ def save_today(plays: list[dict]) -> None:
     print(f"  today.json: {len(merged)} plays saved "
           f"({len(graded)} graded from today preserved)")
 
-
 def append_season_json(plays: list[dict]) -> None:
     """Append / update plays in season_2025_26.json."""
     existing: list[dict] = []
@@ -487,7 +486,6 @@ def append_season_json(plays: list[dict]) -> None:
 
     with open(FILE_SEASON_2526, "w") as f:
         json.dump(clean_json(existing), f, indent=2)
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GIT PUSH
@@ -530,7 +528,6 @@ def git_push(message: str) -> None:
     except Exception as e:
         print(f"  ⚠ Git push error: {e}")
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # RECENT20 BUILDER  (sparkline + score pills with home/away flags)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -555,7 +552,6 @@ def _build_recent20(prior: pd.DataFrame, line: float) -> list[dict]:
             "overLine": pts > line,
         })
     return result
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN
@@ -620,13 +616,6 @@ def main():
     # ── Load models ───────────────────────────────────────────────────────────
     clf, reg, cal, trust = load_models()
 
-    # ── Fetch injury report ──────────────────────────────────────────────────
-    print("  Fetching injury report...")
-    inj_result = injury_fetch(date_str=date_str)
-    injuries   = get_current_injuries(date_str=date_str)
-    print(f"  Injuries loaded: {len(injuries)} players | "
-          f"{inj_result.get('n_changed',0)} changes")
-
     # ── Fetch props ───────────────────────────────────────────────────────────
     props = fetch_props_from_excel(date_str)
     if not props:
@@ -635,11 +624,6 @@ def main():
     if not props:
         print("  No props found. Exiting."); return
 
-    # ── V18: Load latest injury state before scoring ──────────────────────────
-    injury_state = load_injury_state(date_str)
-    out_count = sum(1 for v in injury_state.values() if v.get("status_normalized") == "OUT")
-    q_count   = sum(1 for v in injury_state.values() if v.get("status_normalized") == "QUESTIONABLE")
-    d_count   = sum(1 for v in injury_state.values() if v.get("status_normalized") == "DOUBTFUL")
     print(f"  Injury state: {out_count} OUT  {q_count} QUESTIONABLE  {d_count} DOUBTFUL")
 
     if [p for p in props if p.get("source") == "api"]:
@@ -662,18 +646,9 @@ def main():
         if resolved is None:
             skipped["no_player"] += 1; continue
 
-        # ── Injury gate ──────────────────────────────────────────────────────
-        inj_key    = normalize_injury_name(resolved)
-        inj_status = injuries.get(inj_key, {})
-        inj_norm   = inj_status.get("status_normalized", "")
-        if inj_norm == "OUT":
-            skipped["injured_out"] = skipped.get("injured_out", 0) + 1
             continue  # Player ruled OUT — do not score
 
-        # V18 injury gate — skip OUT players, penalise QUESTIONABLE/DOUBTFUL
-        inj = get_player_injury_status(injury_state, resolved)
         if inj == "OUT":
-            skipped["injury_out"] = skipped.get("injury_out", 0) + 1
             continue
 
         hist = player_idx[resolved]
@@ -717,52 +692,9 @@ def main():
         feats["h2h_games"]   = float(h2h_row.get("H2H_GAMES",          0) or 0)
         feats["h2h_trend"]   = float(h2h_row.get("H2H_PTS_TREND",      0) or 0)
 
-        # ── Injury confidence modifier ────────────────────────────────────────
-        inj_penalty = INJURY_CONF_PENALTY.get(inj_norm, 0.0) or 0.0
-
-        # ── Teammate load boost (primary scorer ruled OUT on same team) ───────
         my_team = str(prior["GAME_TEAM_ABBREVIATION"].iloc[-1]) if "GAME_TEAM_ABBREVIATION" in prior.columns else ""
-        teammate_boost = get_teammate_load_boost(injuries, my_team, opp_team, inj_key)
-        if teammate_boost > 0:
-            feats = dict(feats)
-            feats["level"]   = feats.get("level", 0) + teammate_boost * 0.4
-            feats["volume"]  = feats.get("volume", 0) + teammate_boost * 0.3
-            feats["role_intensity"] = feats.get("role_intensity", 0) + 0.02
-            print(f"    ↑ teammate boost: {resolved} +{teammate_boost:.1f}pts load")
 
         scored = score_play(feats, line, pos, clf, reg, cal, trust or {}, resolved, date_str, h2h_row, opp_team)
-
-        # Apply injury confidence penalty post-scoring (preserves model output, adjusts tier)
-        if inj_penalty > 0:
-            raw_conf = scored["conf"]
-            scored["conf"] = round(max(0.40, raw_conf - inj_penalty), 4)
-            # Recalculate tier label after penalty
-            fc2 = scored["conf"]; gap2 = scored.get("predGap", 0)
-            std10_v = feats.get("std10", 5)
-            h2h_ok2 = scored.get("h2hAligned", True)
-            hv2 = std10_v > 9
-            if not scored.get("enginesAgree") or abs(scored.get("calProb",0.5)-0.5) < 0.04:
-                pass  # lean — keep tierLabel
-            elif fc2 >= 0.73 and gap2 >= 5.0 and std10_v <= 6 and h2h_ok2 and not hv2: scored["tierLabel"]="T1_ULTRA"
-            elif fc2 >= 0.68 and gap2 >= 4.0 and std10_v <= 7 and h2h_ok2 and not hv2: scored["tierLabel"]="T1_PREMIUM"
-            elif fc2 >= 0.63 and gap2 >= 3.0 and std10_v <= 8 and h2h_ok2 and not hv2: scored["tierLabel"]="T1"
-            elif fc2 >= 0.56 and gap2 >= 2.0 and std10_v <= 9 and h2h_ok2:            scored["tierLabel"]="T2"
-            else: scored["tierLabel"] = "T3"
-            scored["tier"] = 1 if scored["tierLabel"].startswith("T1") else (2 if scored["tierLabel"]=="T2" else 3)
-
-        # V18: apply injury confidence penalty (QUESTIONABLE/DOUBTFUL)
-        if inj == "QUESTIONABLE":
-            scored["conf"] = round(max(0.40, scored["conf"] - 0.05), 4)
-            scored["injuryFlag"] = "QUESTIONABLE"
-        elif inj == "DOUBTFUL":
-            scored["conf"] = round(max(0.40, scored["conf"] - 0.08), 4)
-            scored["injuryFlag"] = "DOUBTFUL"
-        else:
-            scored["injuryFlag"] = inj or ""
-
-        # V18: teammate load boost — adjust feats before play dict is built
-        boost = get_teammate_load_boost(injury_state, prop.get("home",""), prop.get("away",""), resolved)
-        scored["teammateBoost"] = boost
 
         play = {
             "player":     resolved,
@@ -819,25 +751,12 @@ def main():
             "h2h_trend":      round(feats.get("h2h_trend", 0), 1),
             # Recent 20 scores — needed by dashboard for sparkline + score pills with home/away flags
             "recent20": _build_recent20(prior, line),
-            # Injury context
-            "avail":            inj_norm or "UNKNOWN",
-            "injuryReason":     inj_status.get("reason_raw", ""),
-            "injuryCategory":   inj_status.get("reason_category", ""),
-            "injuryReportTs":   inj_status.get("report_ts", ""),
-            "injuryStatusChanged": inj_status.get("status_changed", False),
-            "teamInjuryRisk":   get_team_injury_summary(injuries, my_team).get("risk_level","NONE"),
-            "teammateBoost":    round(teammate_boost, 1),
-            "injPenalty":       round(inj_penalty, 3),
-            "injuryFlag":    scored.get("injuryFlag", ""),
-            "teammateBoost": scored.get("teammateBoost", 0.0),
         }
 
         play["preMatchReason"] = generate_pre_match_reason(play)
         plays.append(play)
 
     print(f"  Scored: {len(plays)} plays | Skipped: {skipped}")
-    inj_out = skipped.get("injury_out",0)
-    if inj_out: print(f"  ⚠ {inj_out} players skipped (OUT per injury report)")
     t1_plays = [p for p in plays if p.get("tier") == 1]
     t2_plays = [p for p in plays if p.get("tierLabel") == "T2"]
     print(f"  T1: {len(t1_plays)}  T2: {len(t2_plays)}")
@@ -851,7 +770,6 @@ def main():
 
     log_event(f"B{BATCH}", "BATCH_COMPLETE", detail=f"{len(plays)} plays written")
     print(f"\n  ✓ Batch {BATCH} complete — {len(plays)} plays.\n")
-
 
 if __name__ == "__main__":
     main()

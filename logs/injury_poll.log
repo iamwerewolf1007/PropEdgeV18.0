@@ -1,0 +1,1321 @@
+  [injury] nba_api lib error: cannot import name 'leagueinjurystatus' from 'nba_api.stats.endpoints' (/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/nba_api/stats/endpoints/__init__.py)
+  [injury] NBA API error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=30)
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Result: {'rows': 0, 'changes': [], 'source': 'cache', 'cached': True, 'error': True}
+  [injury] Trying NBA stats API...
+  [injury] NBA API attempt 1 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 2 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 3 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] API failed — trying PDF...
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Result: {'rows': 0, 'changes': [], 'source': 'cache', 'n_rows': 0, 'n_changed': 0, 'cached': True, 'error': True, 'status': 'CACHE_USED'}
+  [injury] Trying NBA stats API...
+  [injury] NBA API attempt 1 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 2 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 3 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] API failed — trying PDF...
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Result: {'rows': 0, 'changes': [], 'source': 'cache', 'n_rows': 0, 'n_changed': 0, 'cached': True, 'error': True, 'status': 'CACHE_USED'}
+  [injury] Trying NBA stats API...
+  [injury] NBA API attempt 1 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 2 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] NBA API attempt 3 error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=45)
+  [injury] API failed — trying PDF...
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Result: {'rows': 0, 'changes': [], 'source': 'cache', 'n_rows': 0, 'n_changed': 0, 'cached': True, 'error': True, 'status': 'CACHE_USED'}
+  [injury] Trying NBA stats API (1 attempt)...
+  [injury] NBA API unavailable (ReadTimeout) — skipping to PDF
+  [injury] API failed — trying PDF...
+  [injury] Probing 19 PDF slots for 2026-04-05...
+  [injury] No PDFs found for 2026-04-05
+  [injury] Probing 19 PDF slots for 2026-04-04...
+  [injury] No PDFs found for 2026-04-04
+  [injury] ⚠ All sources failed — using cached state (0 players) (NBA only publishes reports on game days — off-season/no-games is expected)
+  Result: {'rows': 0, 'changes': [], 'source': 'cache', 'n_rows': 0, 'n_changed': 0, 'cached': True, 'error': True, 'status': 'CACHE_USED'}
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   WAS @ BKN error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   PHX @ CHI error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   MEM @ MIL error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   IND @ CLE error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   CHA @ MIN error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   ORL @ NOP error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   UTA @ OKC error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   LAL @ DAL error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   LAC @ SAC error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury]   HOU @ GSW error: HTTPError: 403 Client Error: Forbidden for url: https://cdn.nba.com/sta
+  [injury] Got 11 games but 0 player rows
+  [injury] CDN boxscore may not be ready yet (available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS (0022501132): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   MEM @ MIL (0022501135): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 11 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 0 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   WAS @ BKN (0022501133): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHX @ CHI (0022501134): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE (0022501136): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 55 players | INACTIVE=0 ACTIVE=55 | 0 changes
+
+  Result: OK | 55 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 130 players | INACTIVE=0 ACTIVE=130 | 0 changes
+
+  Result: OK | 130 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   CHA @ MIN (0022501137): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC (0022501139): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (130 players)
+
+  Result: UNCHANGED | 130 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 185 players | INACTIVE=0 ACTIVE=185 | 0 changes
+
+  Result: OK | 185 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL (0022501140): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (185 players)
+
+  Result: UNCHANGED | 185 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP (0022501138): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 212 players | INACTIVE=0 ACTIVE=212 | 0 changes
+
+  Result: OK | 212 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 238 players | INACTIVE=0 ACTIVE=238 | 0 changes
+
+  Result: OK | 238 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (238 players)
+
+  Result: UNCHANGED | 238 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (238 players)
+
+  Result: UNCHANGED | 238 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (238 players)
+
+  Result: UNCHANGED | 238 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   LAC @ SAC (0022501141): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (238 players)
+
+  Result: UNCHANGED | 238 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Done: 264 players | INACTIVE=0 ACTIVE=264 | 0 changes
+
+  Result: OK | 264 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (264 players)
+
+  Result: UNCHANGED | 264 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (264 players)
+
+  Result: UNCHANGED | 264 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (264 players)
+
+  Result: UNCHANGED | 264 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   HOU @ GSW (0022501142): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] No change since last fetch (264 players)
+
+  Result: UNCHANGED | 264 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] Done: 290 players | INACTIVE=0 ACTIVE=290 | 0 changes
+
+  Result: OK | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-05...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL (0022501135): ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] Done: 265 players | INACTIVE=0 ACTIVE=265 | 0 changes
+
+  Result: OK | 265 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] Done: 290 players | INACTIVE=0 ACTIVE=290 | 0 changes
+
+  Result: OK | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC (0022501139): ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] Done: 263 players | INACTIVE=0 ACTIVE=263 | 0 changes
+
+  Result: OK | 263 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] Done: 290 players | INACTIVE=0 ACTIVE=290 | 0 changes
+
+  Result: OK | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 11 games today
+  [injury]   TOR @ BOS: 30 players, 0 inactive
+  [injury]   WAS @ BKN: 24 players, 0 inactive
+  [injury]   PHX @ CHI: 27 players, 0 inactive
+  [injury]   MEM @ MIL: 25 players, 0 inactive
+  [injury]   IND @ CLE: 24 players, 0 inactive
+  [injury]   CHA @ MIN: 28 players, 0 inactive
+  [injury]   ORL @ NOP: 26 players, 0 inactive
+  [injury]   UTA @ OKC: 27 players, 0 inactive
+  [injury]   LAL @ DAL: 27 players, 0 inactive
+  [injury]   LAC @ SAC: 26 players, 0 inactive
+  [injury]   HOU @ GSW: 26 players, 0 inactive
+  [injury] No change since last fetch (290 players)
+
+  Result: UNCHANGED | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes

@@ -1,0 +1,101 @@
+[
+  {
+    "fetch_ts": "2026-04-05T21:56:13.690764+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 55,
+    "source_hash": "51e1787e91585010",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-05T22:11:34.656801+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 130,
+    "source_hash": "08dcbd77bdff1d68",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-05T22:42:16.673862+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 185,
+    "source_hash": "b94914371c03b008",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-05T23:12:56.233028+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 212,
+    "source_hash": "428c0d4b2c24701a",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-05T23:28:16.242282+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 238,
+    "source_hash": "8037c92663ff21db",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T00:44:56.571096+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 264,
+    "source_hash": "6feec3eaf2e4b3e5",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T02:01:36.257559+00:00",
+    "game_date": "2026-04-05",
+    "n_games": 11,
+    "n_players": 290,
+    "source_hash": "9413b57a8967a1f1",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T05:04:08.154242+00:00",
+    "game_date": "2026-04-06",
+    "n_games": 11,
+    "n_players": 265,
+    "source_hash": "6f2520d298c1332c",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T07:36:36.221283+00:00",
+    "game_date": "2026-04-06",
+    "n_games": 11,
+    "n_players": 290,
+    "source_hash": "9413b57a8967a1f1",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T10:47:26.617948+00:00",
+    "game_date": "2026-04-06",
+    "n_games": 11,
+    "n_players": 263,
+    "source_hash": "4a08a872ad007d3e",
+    "n_changed": 0,
+    "status": "ok"
+  },
+  {
+    "fetch_ts": "2026-04-06T11:58:31.556935+00:00",
+    "game_date": "2026-04-06",
+    "n_games": 11,
+    "n_players": 290,
+    "source_hash": "9413b57a8967a1f1",
+    "n_changed": 0,
+    "status": "ok"
+  }
+]

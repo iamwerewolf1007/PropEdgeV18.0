@@ -1,0 +1,22 @@
+
+============================================================
+  PropEdge V18.0 — Batch 3  |  2026-04-05 UK
+============================================================
+  DVP updated: 90 entries written → dvp_rankings.json
+  Loading game logs...
+  ✓ V14 Adaptive Fusion models loaded (502 player trust scores)
+  Fetching injury report...
+  [injury] nba_api lib error: cannot import name 'leagueinjurystatus' from 'nba_api.stats.endpoints' (/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/nba_api/stats/endpoints/__init__.py)
+  [injury] NBA API error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=30)
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  [injury] No cached state — fetching...
+  [injury] nba_api lib error: cannot import name 'leagueinjurystatus' from 'nba_api.stats.endpoints' (/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/nba_api/stats/endpoints/__init__.py)
+  [injury] NBA API error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=30)
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Injuries loaded: 0 players | 0 changes
+  Excel: 132 props for 2026-04-05
+  [injury] No cached state — fetching...
+  [injury] nba_api lib error: cannot import name 'leagueinjurystatus' from 'nba_api.stats.endpoints' (/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/nba_api/stats/endpoints/__init__.py)
+  [injury] NBA API error: HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=30)
+  [injury] ⚠ All sources failed — using cached state (0 players)
+  Injury state: 0 OUT  0 QUESTIONABLE  0 DOUBTFUL

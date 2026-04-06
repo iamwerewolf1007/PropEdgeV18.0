@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/salman/Documents/GitHub/PropEdgeV18.0/batch_predict.py", line 857, in <module>
+    main()
+    ~~~~^^
+  File "/Users/salman/Documents/GitHub/PropEdgeV18.0/batch_predict.py", line 674, in main
+    inj = get_player_injury_status(injury_state, resolved)
+  File "/Users/salman/Documents/GitHub/PropEdgeV18.0/injury_ingest.py", line 619, in get_player_injury_status
+    key = normalize_name(player_name)
+          ^^^^^^^^^^^^^^
+NameError: name 'normalize_name' is not defined. Did you mean: 'normalize_status'?
+Traceback (most recent call last):
+  File "/Users/salman/Documents/GitHub/PropEdgeV18.0/batch_predict.py", line 31, in <module>
+    from injury_ingest import load_injury_state, get_player_injury_status, get_teammate_load_boost
+ImportError: cannot import name 'get_player_injury_status' from 'injury_ingest' (/Users/salman/Documents/GitHub/PropEdgeV18.0/injury_ingest.py)
