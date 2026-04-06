@@ -1,5 +1,5 @@
 """
-PropEdge V18.0 — batch_predict.py
+PropEdge V17.0 — batch_predict.py
 Fetch props → predict → save today.json + season JSON + Excel.
 Usage: python3 batch_predict.py 1 | 2 | 3 | 4 | 5
 """
@@ -32,6 +32,7 @@ from model_trainer import ML_FEATURES
 
 import requests
 
+
 def _parse_batch() -> int:
     """Parse batch number from argv — safe even when imported by run.py."""
     if len(sys.argv) > 1:
@@ -54,6 +55,7 @@ _NICKNAMES = {
 }
 _SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 
+
 def _norm(name: str) -> str:
     s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
     s = re.sub(r"[.'']", "", s)
@@ -63,6 +65,7 @@ def _norm(name: str) -> str:
         tokens[0] = _NICKNAMES[tokens[0]]
     return " ".join(tokens)
 
+
 def resolve_name(odds_name: str, player_index: dict) -> str | None:
     if odds_name in player_index:
         return odds_name
@@ -71,6 +74,7 @@ def resolve_name(odds_name: str, player_index: dict) -> str | None:
         if _norm(k) == n:
             return k
     return None
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LOAD MODELS
@@ -87,6 +91,7 @@ def load_models():
     except Exception as e:
         print(f"  ⚠ Model load error: {e}. Run `python3 run.py generate` first.")
     return clf, reg, cal, trust
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FETCH PROPS — Excel primary, Odds API fallback
@@ -126,6 +131,7 @@ def fetch_props_from_excel(date_str: str) -> list[dict]:
         print(f"  Excel read error: {e}")
         return []
 
+
 def fetch_props_from_api(date_str: str) -> list[dict]:
     """Fetch from The Odds API (fallback)."""
     fr_utc, to_utc = et_window(date_str)
@@ -145,29 +151,12 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
         print(f"  API events error: {e}")
         return []
 
-    from datetime import timezone as _tz
-    from zoneinfo import ZoneInfo as _ZI
-    _ET_ZONE = _ZI("America/New_York")
-
-    def _commence_to_et(ts: str) -> str:
-        """Convert Odds API UTC commence_time to ET display string e.g. '7:00 PM'."""
-        if not ts:
-            return ""
-        try:
-            from datetime import datetime as _dt
-            utc_dt = _dt.strptime(ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=_tz.utc)
-            et_dt  = utc_dt.astimezone(_ET_ZONE)
-            return et_dt.strftime("%-I:%M %p").upper()   # e.g. "7:00 PM"
-        except Exception:
-            return ""
-
     props = []
     for event in events:
         eid  = event["id"]
         home = event.get("home_team", "")
         away = event.get("away_team", "")
         game = f"{away} @ {home}"
-        game_time = _commence_to_et(event.get("commence_time", ""))
 
         try:
             odds_url = f"{ODDS_BASE_URL}/sports/basketball_nba/events/{eid}/odds"
@@ -217,7 +206,6 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
                 "game":       game,
                 "home":       home,
                 "away":       away,
-                "game_time":  game_time,
                 "line":       avg_line,
                 "over_odds":  od.get("over")  or -110,
                 "under_odds": od.get("under") or -110,
@@ -229,6 +217,7 @@ def fetch_props_from_api(date_str: str) -> list[dict]:
 
     print(f"  Odds API: {len(props)} props for {date_str}")
     return props
+
 
 def append_to_excel(props: list[dict], date_str: str) -> None:
     """Append today's fetched props to the Excel source file."""
@@ -263,6 +252,7 @@ def append_to_excel(props: list[dict], date_str: str) -> None:
         print(f"  Excel updated: {len(combined)} total rows")
     except Exception as e:
         print(f"  Excel append error: {e}")
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SCORE ONE PLAY  (V14 Adaptive Fusion)
@@ -347,17 +337,14 @@ def score_play(
     # ── H2H alignment gate ────────────────────────────────────────────────
     h2h_ts = float(h2h_row.get("H2H_TS_VS_OVERALL", 0) or 0)
     h2h_aligned = True
-    if h2h_games >= 5:
+    if h2h_games >= 3:
         if direction == "OVER"  and h2h_ts < -3: h2h_aligned = False
         if direction == "UNDER" and h2h_ts >  3: h2h_aligned = False
 
     # ── Tier assignment ────────────────────────────────────────────────────
     std10    = feats.get("std10", 5)
     vol_risk = feats.get("vol_risk", 0)
-    # V18: vol_risk = std10 * line / 100 — removing from gate.
-    # Systematically penalised high-scorers (25pt+ lines) which have the
-    # sharpest book attention. std10 > 9 is the meaningful consistency gate.
-    high_vol = std10 > 9  # V18: vol_risk gate removed — penalised high-line stars unfairly
+    high_vol = (std10 > 8) or (vol_risk > 1.5)
     fc = fusion_conf
 
     tier_label = "T3_LEAN" if is_lean else "T3"
@@ -394,6 +381,7 @@ def score_play(
         "seasonProgress": round(sp, 3),
         "meanReversionRisk": feats.get("mean_reversion_risk", 0),
     }
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SAVE / MERGE today.json
@@ -461,6 +449,7 @@ def save_today(plays: list[dict]) -> None:
     print(f"  today.json: {len(merged)} plays saved "
           f"({len(graded)} graded from today preserved)")
 
+
 def append_season_json(plays: list[dict]) -> None:
     """Append / update plays in season_2025_26.json."""
     existing: list[dict] = []
@@ -486,6 +475,7 @@ def append_season_json(plays: list[dict]) -> None:
 
     with open(FILE_SEASON_2526, "w") as f:
         json.dump(clean_json(existing), f, indent=2)
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GIT PUSH
@@ -528,6 +518,7 @@ def git_push(message: str) -> None:
     except Exception as e:
         print(f"  ⚠ Git push error: {e}")
 
+
 # ─────────────────────────────────────────────────────────────────────────────
 # RECENT20 BUILDER  (sparkline + score pills with home/away flags)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -552,6 +543,7 @@ def _build_recent20(prior: pd.DataFrame, line: float) -> list[dict]:
             "overLine": pts > line,
         })
     return result
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN
@@ -624,8 +616,6 @@ def main():
     if not props:
         print("  No props found. Exiting."); return
 
-    print(f"  Injury state: {out_count} OUT  {q_count} QUESTIONABLE  {d_count} DOUBTFUL")
-
     if [p for p in props if p.get("source") == "api"]:
         append_to_excel(props, date_str)
 
@@ -645,11 +635,6 @@ def main():
         resolved = resolve_name(pname, player_idx)
         if resolved is None:
             skipped["no_player"] += 1; continue
-
-            continue  # Player ruled OUT — do not score
-
-        if inj == "OUT":
-            continue
 
         hist = player_idx[resolved]
         prior = hist[hist["GAME_DATE"] < pd.Timestamp(date_str)]
@@ -691,8 +676,6 @@ def main():
         feats["h2h_conf"]    = float(h2h_row.get("H2H_CONFIDENCE",     0) or 0)
         feats["h2h_games"]   = float(h2h_row.get("H2H_GAMES",          0) or 0)
         feats["h2h_trend"]   = float(h2h_row.get("H2H_PTS_TREND",      0) or 0)
-
-        my_team = str(prior["GAME_TEAM_ABBREVIATION"].iloc[-1]) if "GAME_TEAM_ABBREVIATION" in prior.columns else ""
 
         scored = score_play(feats, line, pos, clf, reg, cal, trust or {}, resolved, date_str, h2h_row, opp_team)
 
@@ -770,6 +753,7 @@ def main():
 
     log_event(f"B{BATCH}", "BATCH_COMPLETE", detail=f"{len(plays)} plays written")
     print(f"\n  ✓ Batch {BATCH} complete — {len(plays)} plays.\n")
+
 
 if __name__ == "__main__":
     main()
