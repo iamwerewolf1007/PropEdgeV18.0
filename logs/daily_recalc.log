@@ -5,3 +5,10 @@
   ✓ Loaded: com.propedge.v18.batch3.plist
   ✓ Loaded: com.propedge.v18.batch4.plist
   ✓ Loaded: com.propedge.v18.batch5.plist
+[daily-recalc] 2026-04-07  weekday=1
+  Weekday — reinstalling fixed times.
+  ✓ Loaded: com.propedge.v18.batch1.plist
+  ✓ Loaded: com.propedge.v18.batch2.plist
+  ✓ Loaded: com.propedge.v18.batch3.plist
+  ✓ Loaded: com.propedge.v18.batch4.plist
+  ✓ Loaded: com.propedge.v18.batch5.plist

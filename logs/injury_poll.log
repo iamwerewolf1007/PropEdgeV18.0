@@ -1352,3 +1352,76 @@
   [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
 
   Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   DET @ ORL (0022501144): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   CLE @ MEM (0022501145): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   NYK @ ATL (0022501143): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   PHI @ SAS (0022501146): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury]   POR @ DEN (0022501147): AttributeError: 'NoneType' object has no attribute 'get'
+  [injury] Got 5 games but 0 player rows
+  [injury] BoxScoreTraditionalV3 returned no rows — rosters may not be loaded yet (typically available ~1hr before tip)
+
+  Result: NOT_READY | 290 players | 0 changes
+  [injury] Fetching games for 2026-04-06...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   POR @ DEN: 30 players, 0 inactive
+  [injury]   PHI @ SAS: 30 players, 0 inactive
+  [injury]   NYK @ ATL: 30 players, 0 inactive
+  [injury]   DET @ ORL: 26 players, 0 inactive
+  [injury]   CLE @ MEM: 24 players, 0 inactive
+  [injury] Done: 140 players | INACTIVE=0 ACTIVE=140 | 0 changes
+
+  Result: OK | 140 players | 0 changes
+  [injury] Fetching games for 2026-04-07...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL: 30 players, 0 inactive
+  [injury]   DET @ ORL: 26 players, 0 inactive
+  [injury]   CLE @ MEM: 24 players, 0 inactive
+  [injury]   PHI @ SAS: 30 players, 0 inactive
+  [injury]   POR @ DEN: 30 players, 0 inactive
+  [injury] Done: 140 players | INACTIVE=0 ACTIVE=140 | 0 changes
+
+  Result: OK | 140 players | 0 changes
+  [injury] Fetching games for 2026-04-07...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL: 30 players, 0 inactive
+  [injury]   DET @ ORL: 26 players, 0 inactive
+  [injury]   CLE @ MEM: 24 players, 0 inactive
+  [injury]   PHI @ SAS: 30 players, 0 inactive
+  [injury]   POR @ DEN: 30 players, 0 inactive
+  [injury] No change since last fetch (140 players)
+
+  Result: UNCHANGED | 140 players | 0 changes
+  [injury] Fetching games for 2026-04-07...
+  [injury] CDN scoreboard: 5 games today
+  [injury]   NYK @ ATL: 30 players, 0 inactive
+  [injury]   DET @ ORL: 26 players, 0 inactive
+  [injury]   CLE @ MEM: 24 players, 0 inactive
+  [injury]   PHI @ SAS: 30 players, 0 inactive
+  [injury]   POR @ DEN: 30 players, 0 inactive
+  [injury] No change since last fetch (140 players)
+
+  Result: UNCHANGED | 140 players | 0 changes
